@@ -10,11 +10,12 @@ import frc.robot.Constants.PIDValues;
 import frc.robot.subsystems.DriveBase;
 
 public class Turn extends CommandBase {
-  /** Creates a new Turn. */
+  
   private final DriveBase m_drive;
   private final PIDController anglepid= new PIDController(PIDValues.TurnkP , PIDValues.TurnkI , PIDValues.TurnkD);
-  private final float m_setpoint;
-  public Turn(DriveBase drivesystem, float setpoint) {
+  private final double m_setpoint;
+
+  public Turn(DriveBase drivesystem, double setpoint) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = drivesystem;
     m_setpoint = setpoint;

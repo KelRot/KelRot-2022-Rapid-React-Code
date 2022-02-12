@@ -21,4 +21,13 @@ public final class Constants {
         public static final int sagArka= 2;
     }
 
+    public static final class PIDValues{
+        public static final float TurnkP = 0.02f;
+        public static final float TurnkI = 0f;
+        public static final float TurnkD = 0f;
+    }
+
+    public static final class ShooterConstants{
+        public static final int encoderPort[]= {4,5};
+    }
 }
