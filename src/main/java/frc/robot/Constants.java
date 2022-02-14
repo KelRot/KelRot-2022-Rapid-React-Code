@@ -14,11 +14,14 @@ package frc.robot;
  */
 public final class Constants {
     public static final class DriveConstants{
-        public static final int solOn= 0;
-        public static final int solArka= 1;
+        public static final int solOn = 0;
+        public static final int solArka = 1;
     
-        public static final int sagOn= 3;
-        public static final int sagArka= 2;
+        public static final int sagOn = 3;
+        public static final int sagArka = 2;
+    }
+    public static final class AlignConstants{
+        
     }
 
 }
