@@ -31,7 +31,14 @@ public class Turn extends CommandBase {
   @Override
   public void execute() {
     double rotation = gyropid.calculate(m_drive.getAngle(),m_angle);
+    if(rotation>1){
+      rotation=1;
+    }
+    else if(rotation<-1){
+      rotation= -1;
+    }
     m_drive.arcadeDrive(0, rotation);
+    System.out.println(rotation);
   }
 
   // Called once the command ends or is interrupted.

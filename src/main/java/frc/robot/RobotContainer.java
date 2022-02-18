@@ -49,7 +49,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(js, Button.kY.value).whenPressed(align);
+    new JoystickButton(js , Button.kY.value).whenPressed(align);
   }
 
   /**

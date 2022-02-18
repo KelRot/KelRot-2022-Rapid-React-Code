@@ -22,7 +22,7 @@ public final class Constants {
     }
 
     public static final class PIDValues{
-        public static final double TurnkP = 0.3;
+        public static final double TurnkP = 0.02;
         public static final double TurnkI = 0;
         public static final double TurnkD = 0;
 
