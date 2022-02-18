@@ -22,13 +22,13 @@ public final class Constants {
     }
 
     public static final class PIDValues{
-        public static final float TurnkP = 0.02f;
-        public static final float TurnkI = 0f;
-        public static final float TurnkD = 0f;
+        public static final double TurnkP = 0.3;
+        public static final double TurnkI = 0;
+        public static final double TurnkD = 0;
 
-        public static final float DrivekP = 0f;
-        public static final float DrivekI = 0f;
-        public static final float DrivekD = 0f;
+        public static final double DrivekP = 0;
+        public static final double DrivekI = 0;
+        public static final double DrivekD = 0;
     }
 
     public static final class ShooterConstants{

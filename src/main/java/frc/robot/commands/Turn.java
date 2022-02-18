@@ -4,25 +4,40 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.PIDValues;
+import frc.robot.subsystems.DriveBase;
 
 public class Turn extends CommandBase {
   /** Creates a new Turn. */
-  public Turn() {
+  private final DriveBase m_drive;
+  private final double m_angle;
+  PIDController gyropid = new PIDController(PIDValues.TurnkP , PIDValues.TurnkI , PIDValues.TurnkD);
+  public Turn(DriveBase subsystem, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_drive= subsystem;
+    m_angle= angle;
+
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+   m_drive.resetGyro();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double rotation = gyropid.calculate(m_drive.getAngle(),m_angle);
+    m_drive.arcadeDrive(0, rotation);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

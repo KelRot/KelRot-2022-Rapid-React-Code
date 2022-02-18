@@ -30,12 +30,12 @@ public class DriveBase extends SubsystemBase {
   DifferentialDrive drive = new DifferentialDrive(left, right);
 
   PIDController drivepid = new PIDController(PIDValues.DrivekP , PIDValues.DrivekI , PIDValues.DrivekD);
-  PIDController gyropid = new PIDController(PIDValues.TurnkP , PIDValues.TurnkI , PIDValues.TurnkD);
+
 
   public DriveBase() {
     frontRight.setInverted(true);
     backRight.setInverted(true);
-    gyro.setYawAxis(IMUAxis.kX);
+    gyro.setYawAxis(IMUAxis.kZ);
   }
 
   @Override
@@ -64,9 +64,5 @@ public class DriveBase extends SubsystemBase {
     drive.arcadeDrive(distance, 0);
   }
 */  
-  public void Turn(double angle){
-    gyro.reset();
-    double rotation= gyropid.calculate(gyro.getAngle(), angle);
-    drive.arcadeDrive(0,rotation);
-  }
+
 }

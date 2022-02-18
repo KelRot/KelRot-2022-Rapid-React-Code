@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AlignCommand;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.Turn;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +33,7 @@ public class RobotContainer {
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
+  private final Turn turn180degrees = new Turn(drive , 180.0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,7 +49,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(js, Button.kX.value).whenPressed(new InstantCommand( ()->drive.Turn(90)) );
     new JoystickButton(js, Button.kY.value).whenPressed(align);
   }
 
@@ -60,6 +59,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(driveCommand);
+    return turn180degrees;
   }
 }
