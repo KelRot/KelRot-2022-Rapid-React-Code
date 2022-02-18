@@ -30,7 +30,7 @@ public class DriveBase extends SubsystemBase {
   public DriveBase() {
     frontRight.setInverted(true);
     backRight.setInverted(true);
-    gyro.setYawAxis(IMUAxis.kZ);
+    gyro.setYawAxis(IMUAxis.kY);
   }
 
   @Override

@@ -4,13 +4,20 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.AlignCommand;
+
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.Turn;
 
@@ -22,11 +29,13 @@ import frc.robot.commands.Turn;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final PhotonCamera camera = new PhotonCamera(VisionConstants.cameraName);
   private final DriveBase drive = new DriveBase();
-  private final Joystick js= new Joystick(0);
+  private final Joystick js = new Joystick(0);
 
-  private final DriveCommand driveCommand= new DriveCommand(drive, js);
+  private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final Turn turn90degrees = new Turn(drive,90);
+  private final AlignCommand align = new AlignCommand(drive, camera);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -43,6 +52,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(js, Button.kX.value).whenPressed(turn90degrees);
+    new JoystickButton(js, Button.kY.value).whenPressed(align);
   }
 
   /**
@@ -52,6 +62,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return driveCommand;
+    return new SequentialCommandGroup(commands);
   }
 }

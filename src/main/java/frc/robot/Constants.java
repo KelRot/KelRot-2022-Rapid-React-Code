@@ -30,4 +30,8 @@ public final class Constants {
     public static final class ShooterConstants{
         public static final int encoderPort[]= {4,5};
     }
+
+    public static final class VisionConstants{
+        public static final String cameraName= "Microsoft_LifeCam_HD-3000";
+    }
 }

@@ -12,6 +12,7 @@ public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
   private final DriveBase m_drivebase;
   private final Joystick joystick;
+
   public DriveCommand(DriveBase subsystem, Joystick js) {
     m_drivebase= subsystem;
     joystick= js;
