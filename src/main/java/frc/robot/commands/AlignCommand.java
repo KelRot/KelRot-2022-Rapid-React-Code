@@ -25,19 +25,20 @@ public class AlignCommand extends CommandBase {
     // Called just before this Command runs the first time
     @Override
     public void initialize() {
+        m_drive.resetGyro();
+        
         
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        var result = cam.getLatestResult();
-        
+        var result = cam.getLatestResult(); 
         if(result.hasTargets()){
             System.out.println("Target pos:/n");
             System.out.println(result.getBestTarget().getCorners().get(1).toString());
 
-            double rotation= anglepid.calculate(m_drive.getAngle(), result.getBestTarget().getYaw());
+            double rotation= anglepid.calculate(m_drive.getAngle(), -result.getBestTarget().getYaw());
             m_drive.arcadeDrive(0, rotation);
         }else{
             System.out.println("No targets found!");

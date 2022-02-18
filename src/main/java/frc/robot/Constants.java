@@ -25,10 +25,14 @@ public final class Constants {
         public static final float TurnkP = 0.02f;
         public static final float TurnkI = 0f;
         public static final float TurnkD = 0f;
+
+        public static final float DrivekP = 0f;
+        public static final float DrivekI = 0f;
+        public static final float DrivekD = 0f;
     }
 
     public static final class ShooterConstants{
-        public static final int encoderPort[]= {4,5};
+        public static final int encoderPort[] = {4,5};
     }
 
     public static final class VisionConstants{
