@@ -4,66 +4,60 @@
 
 package frc.robot.commands;
 
-import javax.swing.text.StyledEditorKit;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.VisionSystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.DriveBase;
 import org.photonvision.PhotonCamera;
-import java.util.List;
+import frc.robot.Constants.PIDValues;
+import frc.robot.Constants.VisionConstants;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class AlignCommand extends CommandBase {
-    private final VisionSystem m_vision;
     private final PhotonCamera cam;
-    private final NetworkTableEntry teamColor;
+    private final DriveBase m_drive;
+    private final PIDController anglepid = new PIDController(PIDValues.TurnkP, PIDValues.TurnkI, PIDValues.TurnkD);
 
-    public AlignCommand(VisionSystem subSystem, PhotonCamera camera) {
-        m_vision = subSystem;
+    public AlignCommand(DriveBase subSystem, PhotonCamera camera) {
+        m_drive = subSystem;
         cam = camera;
         addRequirements(subSystem);
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTable table = inst.getTable("Team Color");
-        teamColor= table.getEntry("team color");
-        SendableChooser<String> team_selector = new SendableChooser<>();
-        String red = "red";
-        String blue = "red";
-        team_selector.setDefaultOption("red", red);
-        team_selector.addOption("red", red);
-        team_selector.addOption("blue", blue);
-        SmartDashboard.putData(team_selector);
     }
 
-    // Called just before this Command runs the first time
     @Override
     public void initialize() {
         
     }
 
-    // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
         var result = cam.getLatestResult();
-        
-        
         if(result.hasTargets()){
-            System.out.println("Target pos:/n");
-            System.out.println(result.getBestTarget().getCorners().get(1).toString());
+            double rotation = anglepid.calculate(m_drive.getAngle(), result.getBestTarget().getYaw());
+            //m_drive.arcadeDrive(0, rotation);
+            System.out.println(rotation);
+            System.out.println(m_drive.getAngle());
         }else{
             System.out.println("No targets found!");
         }
     }
 
-    // Make this return true when this Command no longer needs to run execute()
+    public double getDistanceToHub(){
+        var result = cam.getLatestResult();
+        double ans = -1;
+        if(result.hasTargets()){
+            ans = VisionConstants.dist / Math.tan(Math.toRadians(VisionConstants.cameraPitch + result.getBestTarget().getPitch()));
+        }
+        return ans;
+    }
+
     @Override
     public boolean isFinished() {
         return false;
-    }
+    } 
 
-    // Called once after isFinished returns true
     @Override
     public void end(boolean interrupted) {}
 

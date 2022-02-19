@@ -20,8 +20,18 @@ public final class Constants {
         public static final int sagOn = 3;
         public static final int sagArka = 2;
     }
-    public static final class AlignConstants{
-        
+    public static final class VisionConstants{
+        public static final String alignCameraName = "Microsoft_LifeCam_HD-3000";
+        public static final double height = 15;
+        public static final double dist = 264 - height;
+        public static final double cameraPitch = -1;
     }
-
+    public static final class PIDValues{
+        public static final float TurnkP = 0.02f;
+        public static final float TurnkI = 0f;
+        public static final float TurnkD = 0f;
+    }
+    public static final class ShooterConstants{
+        public static final int encoderPort[] = {4, 5};
+    }
 }

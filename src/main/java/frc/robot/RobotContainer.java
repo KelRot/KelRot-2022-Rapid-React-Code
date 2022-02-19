@@ -4,20 +4,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.VisionSystem;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.DriveCommand;
 import org.photonvision.PhotonCamera;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.VisionConstants;
+
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -29,9 +26,8 @@ public class RobotContainer {
     
     private final DriveBase drive = new DriveBase();
     private final Joystick js = new Joystick(0);
-    private final VisionSystem visionsystem = new VisionSystem();
-    private final PhotonCamera camera = new PhotonCamera("photonvision");
-    private final AlignCommand alignCommand = new AlignCommand(visionsystem, camera);
+    private final PhotonCamera camera = new PhotonCamera(VisionConstants.alignCameraName);
+    private final AlignCommand alignCommand = new AlignCommand(drive, camera);
     
     private final DriveCommand driveCommand = new DriveCommand(drive, js);
     
