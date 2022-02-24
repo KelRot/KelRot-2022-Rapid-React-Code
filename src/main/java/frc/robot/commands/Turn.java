@@ -39,19 +39,21 @@ public class Turn extends CommandBase {
    turnkI = Preferences.getDouble("turnkI", 0); 
    turnkD = Preferences.getDouble("turnkD", 0); 
    setpoint = Preferences.getDouble("setpoint", 180);
-   gyropid= new PIDController(turnkP, turnkI, turnkD);
+   gyropid= new PIDController(turnkP, 0, turnkD);
    gyropid.setSetpoint(setpoint);
    gyropid.setTolerance(2, 0.1);
    gyropid.setIntegratorRange(-integralrange, integralrange);
    totalerror = 0;
-   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(gyropid.getSetpoint()-m_drive.getAngle()<=6){
+      gyropid.setI(turnkI);
+    }
     double rotation = gyropid.calculate(m_drive.getAngle());
-    if(rotation>1){
+    /*if(rotation>1){
       rotation=1;
     }
     else if(rotation<-1){
@@ -60,11 +62,13 @@ public class Turn extends CommandBase {
     if(gyropid.atSetpoint()){
       rotation=0;
     }
+*/
     m_drive.arcadeDrive(0, rotation);
     totalerror = MathUtil.clamp(totalerror + gyropid.getPositionError() * gyropid.getPeriod() , -integralrange/ gyropid.getI() , integralrange / gyropid.getI());
     SmartDashboard.putNumber("gyro",m_drive.getAngle());
     System.out.println(m_drive.getAngle());
     SmartDashboard.putNumber("i output", totalerror*gyropid.getI());
+
   }
 
   // Called once the command ends or is interrupted.
