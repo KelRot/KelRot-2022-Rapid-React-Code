@@ -6,15 +6,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.PIDValues;
 import frc.robot.subsystems.DriveBase;
 import org.photonvision.PhotonCamera;
 
 public class AlignCommand extends CommandBase {
     private final DriveBase m_drive;
     private final PhotonCamera cam;
-    private final PIDController anglepid= new PIDController(PIDValues.TurnkP , PIDValues.TurnkI , PIDValues.TurnkD);
+    double alignkP;
+    double alignkI;
+    double alignkD;
+    double setpoint;
+    PIDController anglepid;
 
     public AlignCommand(DriveBase subSystem, PhotonCamera camera) {
         m_drive = subSystem;
@@ -26,27 +31,44 @@ public class AlignCommand extends CommandBase {
     @Override
     public void initialize() {
         m_drive.resetGyro();  
+        alignkP = Preferences.getDouble("alignkP", 0); 
+        alignkI = Preferences.getDouble("alignkI", 0); 
+        alignkD = Preferences.getDouble("alignkD", 0); 
+        setpoint = Preferences.getDouble("alignsetpoint", 30);
+        anglepid= new PIDController(alignkP, alignkI, alignkD);
+        //anglepid.setSetpoint(setpoint);
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        var result = cam.getLatestResult(); 
+        double rotation = 0;
+        var result = cam.getLatestResult();
         if(result.hasTargets()){
-           /* System.out.println("Target pos:/n");
-            System.out.println(result.getBestTarget().getCorners().get(1).toString());
-*/
-            double rotation= anglepid.calculate(m_drive.getAngle(), -result.getBestTarget().getYaw());
-            m_drive.arcadeDrive(0, rotation);
-        }else{
-            System.out.println("No targets found!");
+            //System.out.println("Target pos:/n");
+            //System.out.println(result.getBestTarget().getCorners().get(1).toString());
+
+            rotation = anglepid.calculate(m_drive.getAngle(), result.getBestTarget().getYaw());
+            System.out.print("yaw:");
+            System.out.println(result.getBestTarget().getYaw());
+           
         }
+        else{
+            System.out.println("No targets found!");
+            rotation = 0.5;
+        }
+        if(anglepid.atSetpoint()){
+            rotation=0;
+        }
+        m_drive.arcadeDrive(0, rotation);
+        SmartDashboard.putNumber("gyro", m_drive.getAngle());
+        System.out.println(m_drive.getAngle());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-        return false;
+      return anglepid.atSetpoint();
     }
 
     // Called once after isFinished returns true

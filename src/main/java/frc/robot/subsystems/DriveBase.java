@@ -31,7 +31,6 @@ public class DriveBase extends SubsystemBase {
 
   PIDController drivepid = new PIDController(PIDValues.DrivekP , PIDValues.DrivekI , PIDValues.DrivekD);
 
-
   public DriveBase() {
     frontRight.setInverted(true);
     backRight.setInverted(true);
@@ -40,7 +39,7 @@ public class DriveBase extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
   }
 
   public void curvatureDrive(Joystick js){
@@ -52,17 +51,11 @@ public class DriveBase extends SubsystemBase {
   }
 
   public double getAngle(){
-    return gyro.getAngle();
+    return -gyro.getAngle();
   }
 
   public void resetGyro(){
     gyro.reset();
   }
-
- /* public void driveDistance(double distance){
-    distance= drivepid.calculate(0);
-    drive.arcadeDrive(distance, 0);
-  }
-*/  
 
 }

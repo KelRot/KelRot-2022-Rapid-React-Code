@@ -33,7 +33,8 @@ public class RobotContainer {
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
-  private final Turn turn180degrees = new Turn(drive , 180.0);
+
+  private final Turn turn180degrees = new Turn(drive , 180);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -50,6 +51,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(js , Button.kY.value).whenPressed(align);
+    new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
   }
 
   /**
@@ -58,7 +60,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    //an auto command will not run in autonomous
     return turn180degrees;
   }
 }
