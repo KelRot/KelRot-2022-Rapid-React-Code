@@ -19,6 +19,10 @@ public final class Constants {
     
         public static final int sagOn= 3;
         public static final int sagArka= 2;
+
+        public static final int encoderPorta= 9;
+        public static final int encoderPortb= 8;
+
     }
 
     public static final class PIDValues{

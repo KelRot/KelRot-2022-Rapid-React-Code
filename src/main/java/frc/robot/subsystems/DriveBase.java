@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -18,6 +19,7 @@ import frc.robot.Constants.PIDValues;
 public class DriveBase extends SubsystemBase {
   /** Creates a new DriveBase. */
   ADIS16470_IMU gyro= new ADIS16470_IMU();
+  Encoder enc= new Encoder(DriveConstants.encoderPorta , DriveConstants.encoderPortb);
 
   Talon frontLeft= new Talon(DriveConstants.solOn);
   Talon backLeft= new Talon(DriveConstants.solArka);
@@ -56,6 +58,11 @@ public class DriveBase extends SubsystemBase {
 
   public void resetGyro(){
     gyro.reset();
+  }
+
+  public double getDistance(){
+    return enc.getDistance();
+
   }
 
 }

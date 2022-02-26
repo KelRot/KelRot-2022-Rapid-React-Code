@@ -35,7 +35,7 @@ public class AlignCommand extends CommandBase {
         alignkI = Preferences.getDouble("alignkI", 0); 
         alignkD = Preferences.getDouble("alignkD", 0); 
         setpoint = Preferences.getDouble("alignsetpoint", 30);
-        anglepid= new PIDController(alignkP, alignkI, alignkD);
+        anglepid= new PIDController(alignkP, 0, alignkD);
         //anglepid.setSetpoint(setpoint);
     }
 
@@ -45,21 +45,19 @@ public class AlignCommand extends CommandBase {
         double rotation = 0;
         var result = cam.getLatestResult();
         if(result.hasTargets()){
-            //System.out.println("Target pos:/n");
-            //System.out.println(result.getBestTarget().getCorners().get(1).toString());
-
-            rotation = anglepid.calculate(m_drive.getAngle(), result.getBestTarget().getYaw());
+            if(Math.abs(anglepid.getPositionError())<=3){
+                anglepid.setI(alignkI);
+              }
+            rotation = anglepid.calculate(m_drive.getAngle(), result.getBestTarget().getYaw() + m_drive.getAngle());
             System.out.print("yaw:");
             System.out.println(result.getBestTarget().getYaw());
            
         }
-        else{
+        else {
             System.out.println("No targets found!");
-            rotation = 0.5;
+            rotation = -0.5;
         }
-        if(anglepid.atSetpoint()){
-            rotation=0;
-        }
+     
         m_drive.arcadeDrive(0, rotation);
         SmartDashboard.putNumber("gyro", m_drive.getAngle());
         System.out.println(m_drive.getAngle());
@@ -68,7 +66,8 @@ public class AlignCommand extends CommandBase {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-      return anglepid.atSetpoint();
+      //return anglepid.atSetpoint();
+      return false;
     }
 
     // Called once after isFinished returns true

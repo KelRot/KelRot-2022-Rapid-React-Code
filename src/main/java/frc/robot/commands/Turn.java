@@ -10,11 +10,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Turn extends CommandBase {
   /** Creates a new Turn. */
   private final DriveBase m_drive;
-  private final double m_angle;
+  //private final double m_angle;
 
   double turnkP;
   double turnkI;
@@ -23,10 +24,11 @@ public class Turn extends CommandBase {
   PIDController gyropid;
   double totalerror;
   double integralrange = 1;
-  public Turn(DriveBase subsystem, double angle) {
+  Timer time;
+  public Turn(DriveBase subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive= subsystem;
-    m_angle= angle;
+    //m_angle= angle;
     addRequirements(m_drive);//galiba bundan patladık
 
   }
@@ -40,19 +42,20 @@ public class Turn extends CommandBase {
    turnkD = Preferences.getDouble("turnkD", 0); 
    setpoint = Preferences.getDouble("setpoint", 180);
    gyropid= new PIDController(turnkP, 0, turnkD);
-   gyropid.setSetpoint(setpoint);
+   //gyropid.setSetpoint(setpoint);
    gyropid.setTolerance(2, 0.1);
    gyropid.setIntegratorRange(-integralrange, integralrange);
    totalerror = 0;
+   time.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(gyropid.getSetpoint()-m_drive.getAngle()<=6){
+    if(Math.abs(gyropid.getPositionError())<=8){
       gyropid.setI(turnkI);
     }
-    double rotation = gyropid.calculate(m_drive.getAngle());
+    double rotation = gyropid.calculate(m_drive.getAngle() , setpoint);
     /*if(rotation>1){
       rotation=1;
     }
@@ -80,7 +83,12 @@ public class Turn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(time.get()>=3){
+      return true;
+    }
+    else{
+      return gyropid.atSetpoint();
+    }
   }
 
 }

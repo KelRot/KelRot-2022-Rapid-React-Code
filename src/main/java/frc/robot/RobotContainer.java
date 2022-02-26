@@ -34,7 +34,7 @@ public class RobotContainer {
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
 
-  private final Turn turn180degrees = new Turn(drive , 180);
+  private final Turn turn180degrees = new Turn(drive);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
