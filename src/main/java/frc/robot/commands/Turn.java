@@ -24,7 +24,7 @@ public class Turn extends CommandBase {
   PIDController gyropid;
   double totalerror;
   double integralrange = 1;
-  Timer time;
+  Timer time= new Timer();
   public Turn(DriveBase subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive= subsystem;

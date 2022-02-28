@@ -42,6 +42,7 @@ public class AlignCommand extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
+        double range=0;
         double rotation = 0;
         var result = cam.getLatestResult();
         if(result.hasTargets()){
