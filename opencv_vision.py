@@ -1,9 +1,12 @@
 from collections import deque
 
 from _pynetworktables import NetworkTablesInstance
+from imutils.video import WebcamVideoStream
+from imutils.video import FPS
 from imutils.video import VideoStream
 from networktables import NetworkTables
 import threading
+import logging
 import constants
 import numpy as np
 import argparse
@@ -12,9 +15,8 @@ import imutils
 import time
 
 # network tables
-cond = threading.Condition()
+# cond = threading.Condition()
 notified = [False]
-
 
 def connection_listener(connected, info):
     print(info, '; Connected=%s' % connected)
@@ -22,9 +24,9 @@ def connection_listener(connected, info):
         notified[0] = True
         cond.notify()
 
-
-def init_network_tables(server_id):
-    NetworkTables.initialize(server=server_id)
+def init_network_tables():
+    logging.basicConfig(level=logging.DEBUG)
+    NetworkTables.initialize()
     NetworkTables.addConnectionListener(connection_listener, immediateNotify=True)
     with cond:
         print("Waiting")
@@ -32,18 +34,18 @@ def init_network_tables(server_id):
             cond.wait()
     print("Connected!")
 
+# screen reso
+resolution = (320, 240)
+
+def resize_image(img):
+    resized = cv2.resize(img, resolution, interpolation=cv2.INTER_AREA)
+    return resized
+
 
 # argument parser
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="path to the (optional) video file")
-ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
+ap.add_argument("-n", "--num-frames", type=int, default=100, help="# of frames to loop over for FPS test")
 args = vars(ap.parse_args())
-pts = deque(maxlen=args["buffer"])
-if not args.get("video", False):
-    vs = VideoStream(src=0).start()
-else:
-    vs = cv2.VideoCapture(args["video"])
-time.sleep(2.0)
 
 
 # trackbar
@@ -69,21 +71,23 @@ redUpper_x = constants.TrackCircles.max_redx_HSV
 redLower_y = constants.TrackCircles.min_redy_HSV
 redUpper_y = constants.TrackCircles.max_redy_HSV
 
-#
-init_network_tables('10.56.55.2')
-dashboard = NetworkTables.getTable('SmartDashboard')
-team_color = dashboard.getString('team_color')
-dashboard.putNumber('ball_radius', 0)
+# network tables
+team_color = 'blue'
+# init_network_tables()
+# dashboard = NetworkTables.getTable('SmartDashboard')
+# team_color = dashboard.getString('team_color')
+# dashboard.putNumber('ball_radius', 0)
+# dashboard.putNumber('distance', 0)
 
+vs = WebcamVideoStream(src=0).start()
+# vs = cv2.VideoCapture(0)
+fps = FPS().start()
 while True:
     frame = vs.read()
 
-    frame = frame[1] if args.get("video", False) else frame
-
     if frame is None:
         break
-
-    frame = imutils.resize(frame, width=constants.TrackCircles.frame_width)
+    frame = resize_image(frame)
     blurred = cv2.GaussianBlur(frame, (11, 11), 0)
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = None
@@ -98,6 +102,7 @@ while True:
         mask = cv2.erode(high_mask, None, iterations=4)
         mask = cv2.dilate(mask, None, iterations=4)
     blur = cv2.GaussianBlur(mask, (11, 11), 0)
+    blur = cv2.Canny(blur, 300, 500, 3)
     circles = cv2.HoughCircles(blur,
                                cv2.HOUGH_GRADIENT,
                                int(cv2.getTrackbarPos('dp', 'controls')) / 10,
@@ -119,23 +124,23 @@ while True:
             cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), constants.Circles.rectangle_color, -1)
 
         radius = target_circle[2]
-        dashboard.putNumber("ball_radius", radius)
+        # dashboard.putNumber("ball_radius", radius)
 
-        if 300 < target_circle[0] < 340 and 220 < target_circle[1] < 260:
+        if 150 < target_circle[0] < 170 and 110 < target_circle[1] < 130:
             x_aligned = True
             cv2.putText(frame, 'x_aligned: ALIGNED', (10, 10), font, .5, (0, 0, 0), 1)
         else:
             x_aligned = False
-            cv2.putText(frame, f'x_aligned: {abs(320 - target_circle[0])}', (10, 10), font, .5, (0, 0, 0), 1)
-            cv2.line(frame, (target_circle[0], target_circle[1]), (320, 240), (0, 0, 0), 2)
+            cv2.putText(frame, f'x_aligned: {160 - target_circle[0]}', (10, 10), font, .5, (0, 0, 0), 1)
+            cv2.line(frame, (target_circle[0], target_circle[1]), (int(resolution[0]/2), int(resolution[1]/2)), (0, 0, 0), 2)
+            # dashboard.putNumber("distance", 320 - target_circle[0])
 
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        fps.stop()
+        print(fps.fps())
         break
+    fps.update()
 
-if not args.get("video", False):
-    vs.stop()
-
-else:
-    vs.release()
+vs.stop()
 cv2.destroyAllWindows()
