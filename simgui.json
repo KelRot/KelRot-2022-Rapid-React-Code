@@ -1,0 +1,24 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/DriveBase": "Subsystem",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/VisionSystem": "Subsystem"
+    }
+  },
+  "NetworkTables": {
+    "LiveWindow": {
+      "VisionSystem": {
+        "open": true
+      }
+    },
+    "photonvision": {
+      "open": true,
+      "photonvision": {
+        "open": true
+      }
+    }
+  }
+}

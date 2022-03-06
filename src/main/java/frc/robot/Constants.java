@@ -19,6 +19,27 @@ public final class Constants {
     
         public static final int sagOn= 3;
         public static final int sagArka= 2;
+
+        public static final int encoderPorta= 0;
+        public static final int encoderPortb= 1;
+
     }
 
+    public static final class PIDValues{
+        public static final double TurnkP = 0.0017;
+        public static final double TurnkI = 0;
+        public static final double TurnkD = 0;
+
+        public static final double DrivekP = 0;
+        public static final double DrivekI = 0;
+        public static final double DrivekD = 0;
+    }
+
+    public static final class ShooterConstants{
+        public static final int encoderPort[] = {4,5};
+    }
+
+    public static final class VisionConstants{
+        public static final String cameraName= "Microsoft_LifeCam_HD-3000";
+    }
 }

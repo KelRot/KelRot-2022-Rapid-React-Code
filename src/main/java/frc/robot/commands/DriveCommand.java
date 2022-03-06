@@ -12,6 +12,7 @@ public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
   private final DriveBase m_drivebase;
   private final Joystick joystick;
+
   public DriveCommand(DriveBase subsystem, Joystick js) {
     m_drivebase= subsystem;
     joystick= js;
@@ -21,12 +22,15 @@ public class DriveCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_drivebase.resetGyro();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_drivebase.curvatureDrive(joystick);
+    System.out.println(m_drivebase.getDistance());
   }
 
   // Called once the command ends or is interrupted.
