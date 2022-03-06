@@ -1,4 +1,4 @@
-    from collections import deque
+from collections import deque
 
 from _pynetworktables import NetworkTablesInstance
 from imutils.video import WebcamVideoStream
@@ -144,3 +144,4 @@ while True:
 
 vs.stop()
 cv2.destroyAllWindows()
+
