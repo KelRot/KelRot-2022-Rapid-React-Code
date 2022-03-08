@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.FeederSystem;
 import frc.robot.subsystems.Shooter;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AlignCommand;
@@ -35,10 +36,12 @@ public class RobotContainer {
   private final DriveBase drive = new DriveBase();
   private final Joystick js = new Joystick(0);
   private final Shooter shooter= new Shooter();
+  private final FeederSystem feeder= new FeederSystem();
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
-  private final UseShooters useShooters= new UseShooters(shooter,1);
+  private final UseShooters testShooters = new UseShooters(shooter, 0);
+  //private final UseShooters useShooters= new UseShooters(shooter,1);
 
   private final Turn turn180degrees = new Turn(drive);
 
@@ -58,7 +61,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(js , Button.kY.value).whenPressed(align);
     new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
-    new JoystickButton(js, Button.kB.value).whenPressed(new InstantCommand( ()-> shooter.testShooters(1) ));
+    new JoystickButton(js, Button.kB.value).whenPressed(testShooters).whenReleased(new InstantCommand(shooter::stopShooters));
+    new JoystickButton(js, Button.kA.value).whenPressed( new InstantCommand( ()-> feeder.feedBall(0.75) ) );
     
   }
 

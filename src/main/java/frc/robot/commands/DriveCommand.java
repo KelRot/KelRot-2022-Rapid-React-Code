@@ -31,7 +31,7 @@ public class DriveCommand extends CommandBase {
   @Override
   public void execute() {
     m_drivebase.curvatureDrive(joystick);
-    System.out.println(m_drivebase.getDistance());
+    //System.out.println(m_drivebase.getDistance());
   }
 
   // Called once the command ends or is interrupted.

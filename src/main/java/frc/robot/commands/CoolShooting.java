@@ -28,7 +28,7 @@ public class CoolShooting extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.useShooter(m_setpoint);
+    m_shooter.controlShooter(m_setpoint);
     if(m_shooter.atSetpoint()){
       m_feeder.feedBall(m_output);
     }

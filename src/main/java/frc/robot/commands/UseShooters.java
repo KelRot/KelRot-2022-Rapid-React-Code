@@ -11,10 +11,10 @@ public class UseShooters extends CommandBase {
   
   double[] encValues;
   private final Shooter m_Shooter;
-  private final double m_setpoint;
-  public UseShooters(Shooter shootersystem, double setpoint) {
+  private final double m_output;
+  public UseShooters(Shooter shootersystem, double output) {
     m_Shooter= shootersystem;
-    m_setpoint= setpoint;
+    m_output= output;
     addRequirements(shootersystem);
   }
 
@@ -28,8 +28,7 @@ public class UseShooters extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Shooter.useShooter(m_setpoint);
- 
+    m_Shooter.useShooters(m_output);
     m_Shooter.encoderTest();
   }
 
