@@ -1,15 +1,16 @@
 from collections import deque
 
 from _pynetworktables import NetworkTablesInstance
-from imutils.video import WebcamVideoStream
+from imutils.video.pivideostream import PiVideoStream
 from imutils.video import FPS
 from imutils.video import VideoStream
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 from networktables import NetworkTables
-import threading
 import logging
 import constants
 import numpy as np
-import argparse
+import math
 import cv2
 import imutils
 import time
@@ -25,8 +26,9 @@ def connection_listener(connected, info):
         cond.notify()
 
 def init_network_tables():
+    ip= '10.56.55.2'
     logging.basicConfig(level=logging.DEBUG)
-    NetworkTables.initialize()
+    NetworkTables.initialize(server=ip)
     NetworkTables.addConnectionListener(connection_listener, immediateNotify=True)
     with cond:
         print("Waiting")
@@ -34,31 +36,13 @@ def init_network_tables():
             cond.wait()
     print("Connected!")
 
-# screen reso
-resolution = (320, 240)
+def calculate_yaw_angle(adjacent, opposite):
+    ratioA = 36/140
+    ratioO = 66/50
 
-def resize_image(img):
-    resized = cv2.resize(img, resolution, interpolation=cv2.INTER_AREA)
-    return resized
-
-
-# argument parser
-ap = argparse.ArgumentParser()
-ap.add_argument("-n", "--num-frames", type=int, default=100, help="# of frames to loop over for FPS test")
-args = vars(ap.parse_args())
-
-
-# trackbar
-def empty(x):
-    pass
-
-cv2.namedWindow('controls')
-cv2.createTrackbar('dp', 'controls', int(constants.Circles.circles_dp * 10), 30, empty)
-cv2.createTrackbar('minDist', 'controls', constants.Circles.circles_minDist, 200, empty)
-cv2.createTrackbar('param1', 'controls', constants.Circles.circles_param1, 200, empty)
-cv2.createTrackbar('param2', 'controls', constants.Circles.circles_param2, 200, empty)
-cv2.createTrackbar('minRadius', 'controls', constants.Circles.circles_minRadius, 500, empty)
-cv2.createTrackbar('maxRadius', 'controls', constants.Circles.circles_maxRadius, 1000, empty)
+    radian = math.atan((opposite/ratioO)/(adjacent/ratioA))
+    yaw_angle = radian * (180/math.pi)
+    return yaw_angle
 
 # defining variables
 x_aligned = False
@@ -74,21 +58,25 @@ redUpper_y = constants.TrackCircles.max_redy_HSV
 # network tables
 team_color = 'blue'
 # init_network_tables()
-# dashboard = NetworkTables.getTable('SmartDashboard')
+dashboard = NetworkTables.getTable('SmartDashboard')
 # team_color = dashboard.getString('team_color')
-# dashboard.putNumber('ball_radius', 0)
-# dashboard.putNumber('distance', 0)
+# dashboard.putNumber('ball_yaw_angle', 0)
+dashboard.putBoolean('target_ball', False)
 
-vs = WebcamVideoStream(src=0).start()
-# vs = cv2.VideoCapture(0)
+# camera
+camera = PiCamera()
+camera.resolution = (320, 240)
+camera.framerate = 32
+rawCapture = PiRGBArray(camera, size=(320, 240))
+
+time.sleep(2.0)
 fps = FPS().start()
-while True:
-    frame = vs.read()
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    image = frame.array
 
-    if frame is None:
+    if image is None:
         break
-    frame = resize_image(frame)
-    blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+    blurred = cv2.GaussianBlur(image, (11, 11), 0)
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = None
     if team_color is 'blue':
@@ -105,43 +93,40 @@ while True:
     blur = cv2.Canny(blur, 300, 500, 3)
     circles = cv2.HoughCircles(blur,
                                cv2.HOUGH_GRADIENT,
-                               int(cv2.getTrackbarPos('dp', 'controls')) / 10,
-                               int(cv2.getTrackbarPos('minDist', 'controls')),
-                               param1=int(cv2.getTrackbarPos('param1', 'controls')),
-                               param2=int(cv2.getTrackbarPos('param2', 'controls')),
-                               minRadius=int(cv2.getTrackbarPos('minRadius', 'controls')),
-                               maxRadius=int(cv2.getTrackbarPos('maxRadius', 'controls')))
+                               constants.Circles.circles_dp,
+                               constants.Circles.circles_minDist,
+                               param1=int(constants.Circles.circles_param1),
+                               param2=int(constants.Circles.circles_param2),
+                               minRadius=int(constants.Circles.circles_minRadius),
+                               maxRadius=int(constants.Circles.circles_maxRadius))
 
-    print(circles)
     target_circle = [0, 0, 0]
     if circles is not None:
         circles = np.round(circles[0, :]).astype("int")
-
         for (x, y, r) in circles:
             if target_circle[2] < r:
                 target_circle = [x, y, r]
             cv2.circle(frame, (x, y), r, constants.Circles.circle_color, 4)
             cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), constants.Circles.rectangle_color, -1)
-
         radius = target_circle[2]
-        # dashboard.putNumber("ball_radius", radius)
-
         if 150 < target_circle[0] < 170 and 110 < target_circle[1] < 130:
             x_aligned = True
             cv2.putText(frame, 'x_aligned: ALIGNED', (10, 10), font, .5, (0, 0, 0), 1)
         else:
             x_aligned = False
             cv2.putText(frame, f'x_aligned: {160 - target_circle[0]}', (10, 10), font, .5, (0, 0, 0), 1)
-            cv2.line(frame, (target_circle[0], target_circle[1]), (int(resolution[0]/2), int(resolution[1]/2)), (0, 0, 0), 2)
-            # dashboard.putNumber("distance", 320 - target_circle[0])
+            cv2.putText(frame, f'x_aligned: {160 - target_circle[0]}', (10, 10), font, .5, (0, 0, 0), 1)
+            cv2.line(frame, (target_circle[0], target_circle[1]), 160, 120, (0, 0, 0), 2)
+            # dashboard.putNumber("ball_yaw_angle", calculate_yaw_angle(radius, 160 - target_circle[0]))
+            print(calculate_yaw_angle(radius, 160 - target_circle[0]))
 
     cv2.imshow("frame", frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
         fps.stop()
         print(fps.fps())
         break
     fps.update()
 
-vs.stop()
 cv2.destroyAllWindows()
-
+    
