@@ -5,11 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.FeederSystem;
 
 public class RunFeeder extends CommandBase {
-  /** Creates a new RunFeeders. */
-  public RunFeeder() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private final FeederSystem m_feeder;
+  private final double m_output;
+  public RunFeeder(FeederSystem feeder, double output) {
+    m_feeder= feeder;
+    m_output= output;
+    addRequirements(feeder);
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +22,9 @@ public class RunFeeder extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_feeder.feedBall(m_output);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -27,6 +33,6 @@ public class RunFeeder extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_feeder.ballFed();
   }
 }

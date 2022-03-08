@@ -36,7 +36,11 @@ public final class Constants {
     }
 
     public static final class ShooterConstants{
-        public static final int encoderPort[] = {4,5};
+        public static final int encoderPort1[] = {4,5};
+        public static final int encoderPort2[] = {6,7};
+
+        public static final int motor1 = 1;
+        public static final int motor2 = 2;
     }
 
     public static final class VisionConstants{

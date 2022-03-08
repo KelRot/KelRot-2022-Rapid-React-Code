@@ -29,13 +29,13 @@
     }
 
     public double[] getEncoderRate(){
-        double[] encoderValues= {enc1.getRate(),enc2.getRate()};
+        double[] encoderValues = {enc1.getRate(),enc2.getRate()};
         return encoderValues;
     }
 
     public void useShooter(double setpoint) {
-        double topoutput= feedforward.calculate(setpoint)+ pcontroltop.calculate(enc1.getRate(),setpoint);
-        double bottomoutput= feedforward.calculate(setpoint)+ pcontrolbottom.calculate(enc1.getRate(),setpoint);
+        double topoutput = feedforward.calculate(setpoint)+ pcontroltop.calculate(enc1.getRate(),setpoint);
+        double bottomoutput = feedforward.calculate(setpoint)+ pcontrolbottom.calculate(enc1.getRate(),setpoint);
 
         motor1.set(ControlMode.PercentOutput,topoutput);
         motor2.set(ControlMode.PercentOutput,bottomoutput);
@@ -45,8 +45,24 @@
         return pcontroltop.atSetpoint() && pcontrolbottom.atSetpoint();
     }
 
+    public void stopShooters(){
+      motor1.set(ControlMode.PercentOutput,0);
+      motor2.set(ControlMode.PercentOutput,0);
+    }
+
     public void encoderTest(){
         SmartDashboard.putNumber("üst", enc1.getRate());
         SmartDashboard.putNumber("alt", enc2.getRate());
+    }
+    
+
+    public void testShooters(double output){
+      motor1.set(ControlMode.PercentOutput,output);
+      motor2.set(ControlMode.PercentOutput,output);
+    }
+
+    public void resetEncoders(){
+      enc1.reset();
+      enc2.reset();
     }
   }

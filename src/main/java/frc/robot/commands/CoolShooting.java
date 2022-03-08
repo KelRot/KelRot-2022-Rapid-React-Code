@@ -5,32 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.FeederSystem;
 import frc.robot.subsystems.Shooter;
 
-public class UseShooters extends CommandBase {
-  
-  double[] encValues;
-  private final Shooter m_Shooter;
-  private final double m_setpoint;
-  public UseShooters(Shooter shootersystem, double setpoint) {
-    m_Shooter= shootersystem;
+public class CoolShooting extends CommandBase {
+  FeederSystem m_feeder;
+  Shooter m_shooter;
+  double m_output;
+  double m_setpoint;
+  public CoolShooting(FeederSystem feeder, Shooter shooter, double output, double setpoint) {
+    m_feeder= feeder;
+    m_shooter= shooter;
+    m_output= output;
     m_setpoint= setpoint;
-    addRequirements(shootersystem);
+    addRequirements(feeder,shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_Shooter.resetEncoders();
-    encValues= m_Shooter.getEncoderRate();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Shooter.useShooter(m_setpoint);
- 
-    m_Shooter.encoderTest();
+    m_shooter.useShooter(m_setpoint);
+    if(m_shooter.atSetpoint()){
+      m_feeder.feedBall(m_output);
+    }
+    if(m_feeder.ballFed()&& m_shooter.atSetpoint()){
+      m_shooter.stopShooters();
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Shooter;
@@ -36,7 +38,7 @@ public class RobotContainer {
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
-  private final UseShooters useShooters= new UseShooters(shooter);
+  private final UseShooters useShooters= new UseShooters(shooter,1);
 
   private final Turn turn180degrees = new Turn(drive);
 
@@ -56,7 +58,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(js , Button.kY.value).whenPressed(align);
     new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
-    new JoystickButton(js, Button.kB.value).whenPressed(useShooters);
+    new JoystickButton(js, Button.kB.value).whenPressed(new InstantCommand( ()-> shooter.testShooters(1) ));
+    
   }
 
   /**
