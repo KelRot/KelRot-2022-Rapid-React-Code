@@ -4,17 +4,16 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
-public class UseShooters extends CommandBase {
-  
+public class TestShooters extends CommandBase {
+  double output;
   double[] encValues;
   private final Shooter m_Shooter;
-  private final double m_output;
-  public UseShooters(Shooter shootersystem, double output) {
+  public TestShooters(Shooter shootersystem) {
     m_Shooter= shootersystem;
-    m_output= output;
     addRequirements(shootersystem);
   }
 
@@ -23,13 +22,15 @@ public class UseShooters extends CommandBase {
   public void initialize() {
     m_Shooter.resetEncoders();
     encValues= m_Shooter.getEncoderRate();
+    output = Preferences.getDouble("shooter rpm", 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Shooter.useShooters(m_output);
+    m_Shooter.useShooters(output);
     m_Shooter.encoderTest();
+
   }
 
   // Called once the command ends or is interrupted.

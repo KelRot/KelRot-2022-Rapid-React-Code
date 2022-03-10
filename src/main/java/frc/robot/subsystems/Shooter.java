@@ -21,6 +21,8 @@
 
     
     public Shooter() {
+      enc1.setDistancePerPulse(2*Math.PI/400);
+      enc2.setDistancePerPulse(2*Math.PI/400);
     }
 
     @Override
@@ -51,18 +53,13 @@
     }
 
     public void encoderTest(){
-        SmartDashboard.putNumber("üst", enc1.getRate());
-        SmartDashboard.putNumber("alt", enc2.getRate());
+        SmartDashboard.putNumber("üst", enc1.getRate()*60);
+        SmartDashboard.putNumber("alt", enc2.getRate()*60);
     }
 
     public void useShooters(double output){
-      motor1.set(ControlMode.PercentOutput,output);
+      motor1.set(ControlMode.PercentOutput,-output);
       motor2.set(ControlMode.PercentOutput,output);
-
-      System.out.print("üst");
-      System.out.println(enc1.getRate());
-      System.out.print("alt");
-      System.out.println(enc2.getRate());
     }
     public void resetEncoders(){
       enc1.reset();

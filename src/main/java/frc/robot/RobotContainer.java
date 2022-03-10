@@ -22,7 +22,7 @@ import frc.robot.commands.AlignCommand;
 
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.Turn;
-import frc.robot.commands.UseShooters;
+import frc.robot.commands.TestShooters;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,7 +40,7 @@ public class RobotContainer {
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
   private final AlignCommand align = new AlignCommand(drive, camera);
-  private final UseShooters testShooters = new UseShooters(shooter, 0);
+  private final TestShooters testShooters = new TestShooters(shooter);
   //private final UseShooters useShooters= new UseShooters(shooter,1);
 
   private final Turn turn180degrees = new Turn(drive);
@@ -60,10 +60,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(js , Button.kY.value).whenPressed(align);
-    new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
-    new JoystickButton(js, Button.kB.value).whenPressed(testShooters).whenReleased(new InstantCommand(shooter::stopShooters));
-    new JoystickButton(js, Button.kA.value).whenPressed( new InstantCommand( ()-> feeder.feedBall(0.75) ) );
-    
+    //new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
+    new JoystickButton(js, Button.kB.value).whenHeld(testShooters).whenReleased(new InstantCommand(shooter::stopShooters));
+    new JoystickButton(js, Button.kA.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(-0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0) ));
+    new JoystickButton(js, Button.kX.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0) ));
   }
 
   /**
@@ -71,6 +71,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  
   public Command getAutonomousCommand() {
     //an auto command will not run in autonomous
     return turn180degrees;

@@ -8,14 +8,16 @@
   import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
   import edu.wpi.first.wpilibj.DigitalInput;
-  import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FeederConstants;
 
   public class FeederSystem extends SubsystemBase {
     /** Creates a new FeederSystem. */
-    VictorSPX feedermotor= new VictorSPX(3);// DÜZELT RANDOM DEĞER
+    //VictorSPX feedermotor= new VictorSPX(FeederConstants.motor);
     DigitalInput irsensor= new DigitalInput(2);// düzelt random değer
+    Talon feedermotor = new Talon(0);
     
-
     public FeederSystem() {
 
     }
@@ -26,7 +28,8 @@
     }
 
     public void feedBall(double output){
-        feedermotor.set(ControlMode.PercentOutput, output);
+        //feedermotor.set(ControlMode.PercentOutput, output);
+        feedermotor.set(output);
     }
 
     public boolean ballFed(){
