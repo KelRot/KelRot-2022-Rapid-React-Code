@@ -14,9 +14,8 @@ import frc.robot.Constants.FeederConstants;
 
   public class FeederSystem extends SubsystemBase {
     /** Creates a new FeederSystem. */
-    //VictorSPX feedermotor= new VictorSPX(FeederConstants.motor);
-    DigitalInput irsensor= new DigitalInput(2);// düzelt random değer
-    Talon feedermotor = new Talon(0);
+    VictorSPX feedermotor= new VictorSPX(FeederConstants.motor);
+    DigitalInput irsensor= new DigitalInput(FeederConstants.sensor);
     
     public FeederSystem() {
 
@@ -28,8 +27,7 @@ import frc.robot.Constants.FeederConstants;
     }
 
     public void feedBall(double output){
-        //feedermotor.set(ControlMode.PercentOutput, output);
-        feedermotor.set(output);
+        feedermotor.set(ControlMode.PercentOutput, output);
     }
 
     public boolean ballFed(){

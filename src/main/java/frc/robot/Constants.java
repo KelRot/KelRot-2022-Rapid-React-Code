@@ -14,11 +14,11 @@ package frc.robot;
  */
 public final class Constants {
     public static final class DriveConstants{
-        public static final int solOn= 4;
+        public static final int solOn= 3;
         public static final int solArka= 1;
     
-        public static final int sagOn= 3;
-        public static final int sagArka= 2;
+        public static final int sagOn= 2;
+        public static final int sagArka= 0;
 
         public static final int encoderPorta= 0;
         public static final int encoderPortb= 1;
@@ -44,7 +44,8 @@ public final class Constants {
     }
 
     public static final class FeederConstants{
-        public static final int motor = 3;  
+        public static final int motor = 3;
+        public static final int sensor= 2;  
     }
 
     public static final class VisionConstants{
@@ -55,6 +56,13 @@ public final class Constants {
         public static final int motor1 = 6;
         public static final int motor2 = 7;
         public static final int motorrotation= 4;
+    }
+
+    
+    public static final class IntakeConstants{
+        public static final int motor = 4;  
+        public static final int motorrotation= 5;
+        public static final int sensor = 1;
     }
 
 }

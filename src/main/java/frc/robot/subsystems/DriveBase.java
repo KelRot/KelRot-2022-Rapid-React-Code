@@ -64,5 +64,7 @@ public class DriveBase extends SubsystemBase {
     return enc.getDistance();
 
   }
-
+  public void resetEncoder(){
+    enc.reset();
+  }
 }
