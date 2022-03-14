@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Intake extends SubsystemBase {
-    VictorSP intakeMotor = new VictorSP(IntakeConstants.motor); 
+    VictorSPX intakeMotor = new VictorSPX(IntakeConstants.motor); 
     VictorSP rotationmotor= new VictorSP(IntakeConstants.motorrotation);
 
     public Intake() {}
@@ -21,6 +21,10 @@ public class Intake extends SubsystemBase {
     public void periodic() {}
     
     public void intakeRun(double output){
-        intakeMotor.set(output);
+        intakeMotor.set(ControlMode.PercentOutput,output);
     } 
+
+    public void rotateIntake(){
+        rotationmotor.set(0.5);
+    }
 }

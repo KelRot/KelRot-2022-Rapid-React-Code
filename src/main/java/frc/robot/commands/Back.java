@@ -52,6 +52,7 @@ public class Back extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
+        //return backPID.atSetpoint();
         //until first ar is on
     }
 }

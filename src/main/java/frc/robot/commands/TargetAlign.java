@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBase;
 import org.photonvision.PhotonCamera;
 
-public class AlignCommand extends CommandBase {
+public class TargetAlign extends CommandBase {
     private final DriveBase m_drive;
     private final PhotonCamera cam;
     double alignkP;
@@ -21,7 +21,7 @@ public class AlignCommand extends CommandBase {
     double setpoint;
     PIDController anglepid;
 
-    public AlignCommand(DriveBase subSystem, PhotonCamera camera) {
+    public TargetAlign(DriveBase subSystem, PhotonCamera camera) {
         m_drive = subSystem;
         cam = camera;
         addRequirements(subSystem);
