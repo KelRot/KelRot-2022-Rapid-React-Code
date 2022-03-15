@@ -36,8 +36,8 @@ public final class Constants {
     }
 
     public static final class ShooterConstants{
-        public static final int encoderPort1[] = {4,5}; //DIO
-        public static final int encoderPort2[] = {6,7}; //DIO
+        public static final int encoderPort1[] = {2, 3}; //DIO
+        public static final int encoderPort2[] = {8, 9}; //DIO
 
         public static final int motor1 = 1; //CAN
         public static final int motor2 = 2; //CAN
@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final class FeederConstants{
         public static final int motor = 3; //CAN
-        public static final int sensor= 3; //DIO
+        public static final int sensor= 4; //DIO
     }
 
     public static final class VisionConstants{
@@ -62,7 +62,7 @@ public final class Constants {
     public static final class IntakeConstants{
         public static final int motor = 4; //CAN  
         public static final int motorrotation= 4; //PWM
-        public static final int sensor = 2; //DIO
+        public static final int sensor = 5; //DIO
     }
 
 }

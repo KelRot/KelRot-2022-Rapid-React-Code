@@ -19,7 +19,7 @@ import frc.robot.Constants.PIDValues;
 public class DriveBase extends SubsystemBase {
   /** Creates a new DriveBase. */
   ADIS16470_IMU gyro= new ADIS16470_IMU();
-  Encoder enc= new Encoder(DriveConstants.encoderPorta , DriveConstants.encoderPortb);
+  Encoder enc= new Encoder(DriveConstants.encoderPorta , DriveConstants.encoderPortb, true);
 
   Talon frontLeft= new Talon(DriveConstants.solOn);
   Talon backLeft= new Talon(DriveConstants.solArka);
@@ -31,12 +31,11 @@ public class DriveBase extends SubsystemBase {
 
   DifferentialDrive drive = new DifferentialDrive(left, right);
 
-  PIDController drivepid = new PIDController(PIDValues.DrivekP , PIDValues.DrivekI , PIDValues.DrivekD);
-
   public DriveBase() {
     frontRight.setInverted(true);
     backRight.setInverted(true);
     gyro.setYawAxis(IMUAxis.kZ);
+    enc.setDistancePerPulse((15.2* Math.PI)/1024);
   }
 
   @Override

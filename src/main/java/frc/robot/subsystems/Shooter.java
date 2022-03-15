@@ -13,7 +13,7 @@
 
     VictorSPX motor1= new VictorSPX(ShooterConstants.motor1);
     VictorSPX motor2 = new VictorSPX(ShooterConstants.motor2);
-    Encoder enc1= new Encoder (ShooterConstants.encoderPort1[0],ShooterConstants.encoderPort1[1]); //DEĞERLERI DÜZELT KOD PATLAMASIN DİYE KOYDUM
+    Encoder enc1= new Encoder (ShooterConstants.encoderPort1[0],ShooterConstants.encoderPort1[1]); 
     Encoder enc2= new Encoder (ShooterConstants.encoderPort2[0],ShooterConstants.encoderPort2[1]);
     SimpleMotorFeedforward feedforward= new SimpleMotorFeedforward(0, 0);
     PIDController pcontroltop = new PIDController(0.0, 0.0, 0.0);
@@ -31,7 +31,7 @@
     }
 
     public double[] getEncoderRate(){
-        double[] encoderValues = {enc1.getRate(),enc2.getRate()};
+        double[] encoderValues = {enc1.getRate(), enc2.getRate()};
         return encoderValues;
     }
 
@@ -58,8 +58,9 @@
     }
 
     public void useShooters(double output){
-      motor1.set(ControlMode.PercentOutput,-output);
+      motor1.set(ControlMode.PercentOutput,output);
       motor2.set(ControlMode.PercentOutput,output);
+      encoderTest();
     }
     public void resetEncoders(){
       enc1.reset();

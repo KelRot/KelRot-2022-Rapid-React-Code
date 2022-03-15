@@ -21,10 +21,10 @@ public class Intake extends SubsystemBase {
     public void periodic() {}
     
     public void intakeRun(double output){
-        intakeMotor.set(ControlMode.PercentOutput,output);
+        intakeMotor.set(ControlMode.PercentOutput,-output);
     } 
 
     public void rotateIntake(){
-        rotationmotor.set(0.5);
+        rotationmotor.set(-0.5);
     }
 }

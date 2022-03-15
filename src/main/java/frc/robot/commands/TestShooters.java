@@ -30,6 +30,7 @@ public class TestShooters extends CommandBase {
   public void execute() {
     m_Shooter.useShooters(output);
     m_Shooter.encoderTest();
+    System.out.println("üst " + encValues[0] + " alt " + encValues[1]);
 
   }
 

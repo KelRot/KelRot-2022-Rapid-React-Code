@@ -4,36 +4,28 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Intake;
 
-public class DriveCommand extends CommandBase {
-  /** Creates a new DriveCommand. */
-  private final DriveBase m_drivebase;
-  private final Joystick joystick;
-
-  public DriveCommand(DriveBase subsystem, Joystick js) {
-    m_drivebase= subsystem;
-    joystick= js;
-    addRequirements(subsystem);
+public class autoIntakeRotate extends CommandBase {
+  /** Creates a new autoIntakeRotate. */
+  Intake m_intake;
+  Timer m_timer;
+  public autoIntakeRotate(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_intake= intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_drivebase.resetGyro();
-    m_drivebase.resetEncoder();
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivebase.curvatureDrive(joystick);
-    System.out.println("manyetik: " + m_drivebase.getDistance());
-    //System.out.println(m_drivebase.getDistance());
+    m_intake.rotateIntake();
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +35,12 @@ public class DriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(m_timer.get()>=0.5){
+      return true;
+    }
+    else{
+      return false;
+    }
+    
   }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.FeederSystem;
 import frc.robot.subsystems.Intake;
@@ -21,8 +22,11 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TargetAlign;
 import frc.robot.commands.Back;
+import frc.robot.commands.CoolShooting;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Turn;
+import frc.robot.commands.coolishshooting;
 import frc.robot.commands.TestShooters;
 
 /**
@@ -39,25 +43,37 @@ public class RobotContainer {
   private final Shooter shooter= new Shooter();
   private final FeederSystem feeder= new FeederSystem();
   private final Intake intake = new Intake();
+  private final Climber climber= new Climber();
+  private final Joystick js2= new Joystick(1);
 
 
 
   private final DriveCommand driveCommand = new DriveCommand(drive, js);
-  //private final AlignCommand align = new AlignCommand(drive, camera);
+  private final TargetAlign align = new TargetAlign(drive, camera);
   private final TestShooters testShooters = new TestShooters(shooter);
   private final Back back = new Back(drive, intake, 120);
-  //private final UseShooters useShooters= new UseShooters(shooter,1);
+  private final TestShooters useShooters= new TestShooters(shooter);
+  private final CoolShooting coolShooting= new CoolShooting(feeder, shooter, 0.7, 4000);
+  private final DriveDistance worstCase = new DriveDistance(drive, 120);
+  private final coolishshooting eehh = new coolishshooting(feeder, shooter);
+
 
   private final Turn turn180degrees = new Turn(drive);
 
 
-  /*private final SequentialCommandGroup two_balls = new SequentialCommandGroup(
+ /* private final SequentialCommandGroup two_balls = new SequentialCommandGroup(
         align,
-        testShooters,
+        coolShooting,
         back,
         align,
-        testShooters
-  );*/
+        coolShooting
+  );
+*/
+  /*private final SequentialCommandGroup worseCase = new SequentialCommandGroup(
+      coolShooting,
+      back
+  );
+*/
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -75,11 +91,18 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //new JoystickButton(js , Button.kY.value).whenPressed(align);
     //new JoystickButton(js , Button.kX.value).whenPressed(turn180degrees);
-    new JoystickButton(js, Button.kB.value).whenHeld(testShooters).whenReleased(new InstantCommand(shooter::stopShooters));
-    new JoystickButton(js, Button.kA.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(-0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0)));
-    new JoystickButton(js, Button.kX.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0)));
-    new JoystickButton(js, Button.kY.value).whenHeld(new InstantCommand( ()-> intake.intakeRun(-0.7))).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
-  }
+    new JoystickButton(js, Button.kB.value).whenHeld(new InstantCommand( ()-> intake.intakeRun(0.7))).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
+    new JoystickButton(js, Button.kX.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(-0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0)));
+    new JoystickButton(js, Button.kY.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0)));
+    new JoystickButton(js, Button.kA.value).whenHeld(new InstantCommand( ()-> intake.intakeRun(-0.7))).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
+    new JoystickButton(js, Button.kRightBumper.value).whenHeld(align);
+
+    new JoystickButton(js2, 1).whenHeld(testShooters).whenReleased(new InstantCommand( shooter::stopShooters));
+    new JoystickButton(js2, 2).whenHeld(new InstantCommand(intake::rotateIntake)).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
+    new JoystickButton(js2, 5).whenHeld(new InstantCommand( ()-> climber.Climb(0.8)));
+    new JoystickButton(js2, 3).whenHeld(new InstantCommand( ()-> climber.Climb(-0.8)));
+
+   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -89,6 +112,6 @@ public class RobotContainer {
   
   public Command getAutonomousCommand() {
     //an auto command will not run in autonomous
-    return turn180degrees;
+    return eehh;
   }
 }

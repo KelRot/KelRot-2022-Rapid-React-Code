@@ -8,9 +8,8 @@
   import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
   import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FeederConstants;
+  import edu.wpi.first.wpilibj2.command.SubsystemBase;
+  import frc.robot.Constants.FeederConstants;
 
   public class FeederSystem extends SubsystemBase {
     /** Creates a new FeederSystem. */

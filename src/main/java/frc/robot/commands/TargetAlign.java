@@ -24,7 +24,7 @@ public class TargetAlign extends CommandBase {
     public TargetAlign(DriveBase subSystem, PhotonCamera camera) {
         m_drive = subSystem;
         cam = camera;
-        addRequirements(subSystem);
+        addRequirements(m_drive);
     }
 
     // Called just before this Command runs the first time
@@ -34,15 +34,16 @@ public class TargetAlign extends CommandBase {
         alignkP = Preferences.getDouble("alignkP", 0); 
         alignkI = Preferences.getDouble("alignkI", 0); 
         alignkD = Preferences.getDouble("alignkD", 0); 
-        //setpoint = Preferences.getDouble("alignsetpoint", 30);
+        setpoint = Preferences.getDouble("alignsetpoint", 30);
         anglepid= new PIDController(alignkP, 0, alignkD);
-        //anglepid.setSetpoint(setpoint);
+        anglepid.setSetpoint(setpoint);
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
         //double range=0;
+        
         double rotation = 0;
         var result = cam.getLatestResult();
         if(result.hasTargets()){
@@ -58,7 +59,10 @@ public class TargetAlign extends CommandBase {
             System.out.println("No targets found!");
             rotation = -0.5;
         }
-     
+        /*if(Math.abs(anglepid.getPositionError())<=3){
+            anglepid.setI(alignkI);
+          }
+        double rotation= anglepid.calculate(m_drive.getAngle());*/ //test
         m_drive.arcadeDrive(0, rotation);
         SmartDashboard.putNumber("gyro", m_drive.getAngle());
         System.out.println(m_drive.getAngle());
