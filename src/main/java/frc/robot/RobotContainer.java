@@ -27,6 +27,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.Turn;
 import frc.robot.commands.coolishshooting;
+import frc.robot.commands.ugabugacizgigec;
 import frc.robot.commands.TestShooters;
 
 /**
@@ -56,6 +57,7 @@ public class RobotContainer {
   private final CoolShooting coolShooting= new CoolShooting(feeder, shooter, 0.7, 4000);
   private final DriveDistance worstCase = new DriveDistance(drive, 120);
   private final coolishshooting eehh = new coolishshooting(feeder, shooter);
+  private final ugabugacizgigec step2 = new ugabugacizgigec(drive);
 
 
   private final Turn turn180degrees = new Turn(drive);
@@ -74,6 +76,10 @@ public class RobotContainer {
       back
   );
 */
+
+    private final SequentialCommandGroup ball = new SequentialCommandGroup(
+        eehh, step2
+    );
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -112,6 +118,6 @@ public class RobotContainer {
   
   public Command getAutonomousCommand() {
     //an auto command will not run in autonomous
-    return eehh;
+    return ball;
   }
 }
