@@ -29,23 +29,30 @@ public class coolishshooting extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.useShooters(0.7);
-    if(timer.get()>=3){
-      m_feeder.feedBall(0.7);
+    while(!m_feeder.ballFed()){
+      m_feeder.feedBall(0.5);
     }
-    if(m_feeder.ballFed() && timer.get()>=15){
-      m_feeder.feedBall(0);
-      m_shooter.stopShooters();
+    m_shooter.useShooters(0.7);
+    if(timer.get()>=5 && m_feeder.ballFed()){
+      m_feeder.feedBall(0.3);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_feeder.feedBall(0);
+    m_shooter.useShooters(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(timer.get()>=10){
+      return m_feeder.ballFed();
+    }
+    else{
+      return false;
+    }
   }
 }

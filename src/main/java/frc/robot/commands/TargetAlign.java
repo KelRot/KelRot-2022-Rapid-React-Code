@@ -63,7 +63,7 @@ public class TargetAlign extends CommandBase {
             anglepid.setI(alignkI);
           }
         double rotation= anglepid.calculate(m_drive.getAngle());*/ //test
-        m_drive.arcadeDrive(0, rotation);
+        //m_drive.arcadeDrive(0, rotation);
         SmartDashboard.putNumber("gyro", m_drive.getAngle());
         System.out.println(m_drive.getAngle());
     }

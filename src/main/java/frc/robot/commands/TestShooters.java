@@ -21,7 +21,6 @@ public class TestShooters extends CommandBase {
   @Override
   public void initialize() {
     m_Shooter.resetEncoders();
-    encValues= m_Shooter.getEncoderRate();
     output = Preferences.getDouble("shooter rpm", 0);
   }
 
@@ -30,6 +29,7 @@ public class TestShooters extends CommandBase {
   public void execute() {
     m_Shooter.useShooters(output);
     m_Shooter.encoderTest();
+    encValues= m_Shooter.getEncoderRate();
     System.out.println("üst " + encValues[0] + " alt " + encValues[1]);
 
   }

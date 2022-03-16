@@ -96,11 +96,11 @@ public class RobotContainer {
     new JoystickButton(js, Button.kY.value).whenHeld( new InstantCommand( ()-> feeder.feedBall(0.7) ) ).whenReleased(new InstantCommand( ()-> feeder.feedBall(0)));
     new JoystickButton(js, Button.kA.value).whenHeld(new InstantCommand( ()-> intake.intakeRun(-0.7))).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
     new JoystickButton(js, Button.kRightBumper.value).whenHeld(align);
-
+    
     new JoystickButton(js2, 1).whenHeld(testShooters).whenReleased(new InstantCommand( shooter::stopShooters));
     new JoystickButton(js2, 2).whenHeld(new InstantCommand(intake::rotateIntake)).whenReleased(new InstantCommand( ()-> intake.intakeRun(0)));
-    new JoystickButton(js2, 5).whenHeld(new InstantCommand( ()-> climber.Climb(0.8)));
-    new JoystickButton(js2, 3).whenHeld(new InstantCommand( ()-> climber.Climb(-0.8)));
+    new JoystickButton(js2, 5).whenHeld(new InstantCommand( ()-> climber.Rotate(0.8))).whenReleased(new InstantCommand( ()-> climber.Rotate(0)));
+    new JoystickButton(js2, 3).whenHeld(new InstantCommand( ()-> climber.Rotate(-0.8))).whenReleased(new InstantCommand( ()-> climber.Rotate(0)));
 
    }
 
