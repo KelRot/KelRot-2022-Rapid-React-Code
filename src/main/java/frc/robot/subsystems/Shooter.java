@@ -21,8 +21,8 @@
 
     
     public Shooter() {
-      enc1.setDistancePerPulse(1/400);
-      enc2.setDistancePerPulse(1/400);
+      enc1.setDistancePerPulse(1.0/400.0);
+      enc2.setDistancePerPulse(1.0/400.0);
     }
 
     @Override
