@@ -4,48 +4,46 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FeederSystem;
+import frc.robot.subsystems.Shooter;
 
-public class RunFeeder extends CommandBase {
-  private final FeederSystem m_feeder;
-  private final double m_output;
-  Timer timer= new Timer();
-  public RunFeeder(FeederSystem feeder, double output) {
+public class CoolShooting extends CommandBase {
+  FeederSystem m_feeder;
+  Shooter m_shooter;
+  double m_output;
+  double m_setpoint;
+  public CoolShooting(FeederSystem feeder, Shooter shooter, double output, double setpoint) {
     m_feeder= feeder;
+    m_shooter= shooter;
     m_output= output;
-    addRequirements(feeder);
+    m_setpoint= setpoint;
+    addRequirements(feeder,shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    timer.start();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_feeder.feedBall(m_output);
-    System.out.println(m_feeder.ballFed());
+    m_shooter.controlShooter(m_setpoint);
+    if(m_shooter.atSetpoint()){
+      m_feeder.feedBall(m_output);
+    }
+    if(m_feeder.ballFed()&& m_shooter.atSetpoint()){
+      m_shooter.stopShooters();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_feeder.feedBall(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timer.get()>=7 || m_feeder.ballFed()){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return false;
   }
-
 }

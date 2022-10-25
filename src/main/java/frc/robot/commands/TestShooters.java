@@ -4,35 +4,34 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Shooter;
 
-public class DriveCommand extends CommandBase {
-    /** Creates a new DriveCommand. */
-    private final DriveBase m_drivebase;
-    private final Joystick joystick;
+public class TestShooters extends CommandBase {
+    double output;
+    double[] encValues;
+    private final Shooter m_Shooter;
 
-    public DriveCommand(DriveBase subsystem, Joystick js) {
-        m_drivebase = subsystem;
-        joystick = js;
-        addRequirements(subsystem);
-        // Use addRequirements() here to declare subsystem dependencies.
+    public TestShooters(Shooter shootersystem) {
+        m_Shooter = shootersystem;
+        addRequirements(m_Shooter);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_drivebase.resetGyro();
-        m_drivebase.resetEncoder();  
+        m_Shooter.resetEncoders();
+        output = Preferences.getDouble("shooter rpm", 0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_drivebase.curvatureDrive(joystick);
-        //System.out.println("manyetik: " + m_drivebase.getDistance());
-        //System.out.println(m_drivebase.getDistance());
+        m_Shooter.useShooters(0.50);
+        m_Shooter.encoderTest();
+        encValues= m_Shooter.getEncoderRPM();
+        //System.out.println("üst " + encValues[0] + " alt " + encValues[1]);
     }
 
     // Called once the command ends or is interrupted.

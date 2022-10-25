@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -14,55 +13,51 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.PIDValues;
 
 public class DriveBase extends SubsystemBase {
-  /** Creates a new DriveBase. */
-  ADIS16470_IMU gyro= new ADIS16470_IMU();
-  Encoder enc= new Encoder(DriveConstants.encoderPorta , DriveConstants.encoderPortb);
+    ADIS16470_IMU gyro = new ADIS16470_IMU();
+    Encoder enc = new Encoder(DriveConstants.encoderPortA, DriveConstants.encoderPortB, true);
 
-  Talon frontLeft= new Talon(DriveConstants.solOn);
-  Talon backLeft= new Talon(DriveConstants.solArka);
-  Talon frontRight= new Talon(DriveConstants.sagOn);
-  Talon backRight= new Talon(DriveConstants.sagArka);
+    Talon leftFront = new Talon(DriveConstants.leftFront);
+    Talon leftBack = new Talon(DriveConstants.leftBack);
+    Talon rightFront = new Talon(DriveConstants.rightFront);
+    Talon rightBack = new Talon(DriveConstants.rightBack);
 
-  MotorControllerGroup left= new MotorControllerGroup(frontLeft, backLeft);
-  MotorControllerGroup right= new MotorControllerGroup(frontRight, backRight);
+    MotorControllerGroup _left = new MotorControllerGroup(leftFront, leftBack);
+    MotorControllerGroup _right = new MotorControllerGroup(rightFront, rightBack);
 
-  DifferentialDrive drive = new DifferentialDrive(left, right);
+    DifferentialDrive drive = new DifferentialDrive(_left, _right);
 
-  PIDController drivepid = new PIDController(PIDValues.DrivekP , PIDValues.DrivekI , PIDValues.DrivekD);
+    public DriveBase() {
+        rightFront.setInverted(true);
+        rightBack.setInverted(true);
+        gyro.setYawAxis(IMUAxis.kZ);
+        enc.setDistancePerPulse((15.2 * Math.PI)/1024.0);
+    }
 
-  public DriveBase() {
-    frontRight.setInverted(true);
-    backRight.setInverted(true);
-    gyro.setYawAxis(IMUAxis.kZ);
-  }
+    @Override
+    public void periodic() {}
 
-  @Override
-  public void periodic() {
-    
-  }
+    public void curvatureDrive(Joystick js){
+        drive.curvatureDrive(js.getRawAxis(1), js.getRawAxis(0), js.getRawButton(5));
+    }
 
-  public void curvatureDrive(Joystick js){
-    drive.curvatureDrive(-js.getRawAxis(1),js.getRawAxis(4),js.getRawButton(5));
-  }
+    public void arcadeDrive(double speed, double rotation){
+        drive.arcadeDrive(speed, rotation);
+    }
 
-  public void arcadeDrive(double speed, double rotation){
-    drive.arcadeDrive(speed, rotation);
-  }
+    public double getAngle(){
+        return -gyro.getAngle();
+    }
 
-  public double getAngle(){
-    return -gyro.getAngle();
-  }
+    public void resetGyro(){
+        gyro.reset();
+    }
 
-  public void resetGyro(){
-    gyro.reset();
-  }
-
-  public double getDistance(){
-    return enc.getDistance();
-
-  }
-
+    public double getDistance(){
+        return enc.getDistance();
+    }
+    public void resetEncoder(){
+        enc.reset();
+    }
 }

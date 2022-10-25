@@ -6,46 +6,41 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.FeederSystem;
+import frc.robot.subsystems.Intake;
 
-public class RunFeeder extends CommandBase {
-  private final FeederSystem m_feeder;
-  private final double m_output;
-  Timer timer= new Timer();
-  public RunFeeder(FeederSystem feeder, double output) {
-    m_feeder= feeder;
-    m_output= output;
-    addRequirements(feeder);
+public class autoIntakeRotate extends CommandBase {
+  /** Creates a new autoIntakeRotate. */
+  Intake m_intake;
+  Timer m_timer;
+  public autoIntakeRotate(Intake intake) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_intake= intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    timer.start();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_feeder.feedBall(m_output);
-    System.out.println(m_feeder.ballFed());
+    m_intake.rotateIntake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_feeder.feedBall(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timer.get()>=7 || m_feeder.ballFed()){
+    if(m_timer.get()>=0.5){
       return true;
     }
     else{
       return false;
     }
+    
   }
-
 }

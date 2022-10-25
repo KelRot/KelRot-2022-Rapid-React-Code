@@ -14,19 +14,19 @@ package frc.robot;
  */
 public final class Constants {
     public static final class DriveConstants{
-        public static final int solOn= 0;
-        public static final int solArka= 1;
+        public static final int leftFront = 3; //PWM
+        public static final int leftBack = 2; //PWM
     
-        public static final int sagOn= 3;
-        public static final int sagArka= 2;
+        public static final int rightFront = 1; //PWM
+        public static final int rightBack = 0; //PWM
 
-        public static final int encoderPorta= 0;
-        public static final int encoderPortb= 1;
+        public static final int encoderPortA = 0; //DIO
+        public static final int encoderPortB = 1; //DIO
 
     }
 
     public static final class PIDValues{
-        public static final double TurnkP = 0.0017;
+        public static final double TurnkP = 0;
         public static final double TurnkI = 0;
         public static final double TurnkD = 0;
 
@@ -36,10 +36,33 @@ public final class Constants {
     }
 
     public static final class ShooterConstants{
-        public static final int encoderPort[] = {4,5};
+        public static final int encoderPort1[] = {2, 3}; //DIO
+        public static final int encoderPort2[] = {8, 9}; //DIO
+
+        public static final int motor1 = 1; //CAN
+        public static final int motor2 = 2; //CAN
+    }
+
+    public static final class FeederConstants{
+        public static final int motor = 3; //CAN
+        public static final int sensor= 4; //DIO
     }
 
     public static final class VisionConstants{
         public static final String cameraName= "Microsoft_LifeCam_HD-3000";
     }
+
+    public static final class ClimberConstants{
+        public static final int motor1 = 6; //CAN
+        public static final int motor2 = 7; //CAN
+        public static final int motorRotation= 5; //CAN
+    }
+
+    
+    public static final class IntakeConstants{
+        public static final int motor = 4; //CAN  
+        public static final int motorrotation = 4; //PWM
+        public static final int sensor = 5; //DIO
+    }
+
 }

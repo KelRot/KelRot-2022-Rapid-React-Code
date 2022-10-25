@@ -4,17 +4,27 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FeederConstants;
 
 public class FeederSystem extends SubsystemBase {
-  /** Creates a new FeederSystem. */
+    VictorSPX feederMotor = new VictorSPX(FeederConstants.motor);
+    DigitalInput irSensor = new DigitalInput(FeederConstants.sensor);
+    
+    public FeederSystem() {}
 
-  
+    @Override
+    public void periodic(){}
 
-  public FeederSystem() {}
+    public void feedBall(double output){
+        feederMotor.set(ControlMode.PercentOutput, output);
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+    public boolean ballFed(){
+        return !irSensor.get();
+    }
   }
-}
